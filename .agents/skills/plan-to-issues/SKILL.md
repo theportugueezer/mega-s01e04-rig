@@ -14,15 +14,42 @@ in a shell this agent can run.
 2. Draft the split as a table: title · plan section · scope · done when · blocked by.
    One issue per unit of work.
 3. **Stop and show the table to the human.** Publish nothing until they approve it.
-4. Ask the human what every issue here must carry (fields, labels, wording), unless it is
-   already written down in this session or in the repo.
+4. Every issue here carries this, so workers and the reviewer can sort them cold
+   (agreed with the human on 2026-11-03; change it here, not in chat):
+
+   - Title: the plan section's own name (`Run log reader`, `Digest page: GET /digest/:night`).
+   - Label: `plan:<plan name>` from `plan.md`'s frontmatter (`plan:morning-digest`). Create it
+     once with `gh label create`.
+   - Body, in this order:
+
+     ```md
+     Source: plan.md § <n>
+
+     ## Scope
+     <the section's text, as written>
+
+     ## Done when
+     <the section's "Done when", as written>
+
+     ## Blocked by
+     <#n, …>, or `none`
+     ```
+
+   Ask the human only when a plan needs something beyond this.
 5. Create each issue in dependency order, so blocked-by can cite real numbers:
 
    ```sh
-   gh issue create --title "<title>" --body-file <tmp.md>
+   gh issue create --title "<title>" --label "plan:<plan name>" --body-file <tmp.md>
    ```
 
 6. Record every issue URL from gh's output (not from memory) and reply with the list.
+
+## Issues that wait on someone else
+
+An issue whose "Done when" needs the other side (a reviewer's look, a reply, a sign-off) stays
+open until they have confirmed, even when our part is sent. The reviewer reads the open issue;
+closing it at send time reads as "nothing to look at". The clean-up step that follows (a preview
+losing its marker, ADR 0003) is blocked by that confirmation, not by the send.
 
 Closing one, with the closing comment from AGENTS.md:
 
