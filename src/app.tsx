@@ -33,5 +33,12 @@ export function createApp(config: RigConfig = loadConfig()) {
     );
   });
 
+  // Agents read this one; it is the same Night the page renders, unreshaped (ADR 0001).
+  app.get('/api/digest/:night', (c) => {
+    const name = c.req.param('night');
+    const night = NIGHT_PARAM.test(name) ? readNight(config.runsDir, name) : null;
+    return night ? c.json(night) : c.json({ error: 'no such night' }, 404);
+  });
+
   return app;
 }
